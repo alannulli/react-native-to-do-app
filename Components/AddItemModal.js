@@ -5,7 +5,6 @@ import { Button, Text, TextInput, Snackbar } from 'react-native-paper';
 
 import { v4 as uuidv4 } from 'uuid';
 import DatePicker from "@dietime/react-native-date-picker";
-import moment from 'moment';
 
 export default function AddItemModal({itemList, setItemList}) {
     const [addItemModalVisible, setAddItemModalVisible] = useState(false);
@@ -13,7 +12,7 @@ export default function AddItemModal({itemList, setItemList}) {
     // input fields for adding new item
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
-    const [date, setDate] = useState(moment())
+    const [date, setDate] = useState(new Date())
 
     const [snackbar, setSnackbar] = useState(false)
 
@@ -23,6 +22,8 @@ export default function AddItemModal({itemList, setItemList}) {
             console.log("incorrect input") // can make inputs highlighted too to show required*
             return
         }
+
+        console.log(date)
 
         const item = {
             key: uuidv4(),
@@ -34,7 +35,7 @@ export default function AddItemModal({itemList, setItemList}) {
         setItemList([...itemList, item])
         setTitle('')
         setDescription('')
-        setDate(moment())
+        setDate(new Date())
         setSnackbar(true)
       }
 

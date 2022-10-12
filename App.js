@@ -1,5 +1,4 @@
-import moment from 'moment';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StatusBar, StyleSheet, View,
   SafeAreaView, ScrollView } from 'react-native';
 import { Card, Title, Checkbox, Text } from 'react-native-paper';
@@ -14,14 +13,14 @@ const placeholderItemList = [
     key: uuidv4(),
     title: 'Graduate on time',
     description: 'Try and get at least a 3.5 GPA but if not it is okay because GPA is just a number!',
-    date: moment('05/21/2023'),
+    date: new Date('05/21/2023'),
     done: false
   },
   {
     key: uuidv4(),
     title: 'Try More Restaurant Week Foods',
     description: 'Go back to Maru but try a few more!',
-    date: moment(),
+    date: new Date(),
     done: false
   },
 ]
@@ -43,6 +42,14 @@ export default function App() {
     }))
   }
 
+  // useEffect(() => {
+  //   let newList = itemList
+  //   newList.sort((a,b) => {
+  //     return new Date(a.date).getTime() - new Date(b.date).getTime()
+  //     })
+  //   setItemList(newList)
+  // }, [itemList])
+
   return (
     <SafeAreaView style={styles.container}>
         <AddItemModal
@@ -54,20 +61,18 @@ export default function App() {
             <Card.Content>
               <Title>Bucket List Items</Title>
               <ScrollView style={styles.scrollView}>
-                {itemList.filter(item => !item.done).sort((a,b) => {
-                  return new Date(a.date).getTime() - new Date(b.date).getTime()
-                  }).map((item) => {
-                  return (
-                    <EditItemModal
-                      itemKey={item.key}
-                      itemTitle={item.title}
-                      itemDescription={item.description}
-                      itemDate={item.date}
-                      itemList={itemList}
-                      setItemList={setItemList}
-                      handleFinish={handleFinish}
-                      />
-                    );
+                {itemList.filter(item => !item.done).map((item) => {
+                    return (
+                      <EditItemModal
+                        itemKey={item.key}
+                        itemTitle={item.title}
+                        itemDescription={item.description}
+                        itemDate={item.date}
+                        itemList={itemList}
+                        setItemList={setItemList}
+                        handleFinish={handleFinish}
+                        />
+                      );
                   })}
               </ScrollView>
             </Card.Content>
@@ -84,7 +89,7 @@ export default function App() {
                     <View key={item.key} style={styles.todo}>
                       <View style={styles.textBox}>
                         <Text variant="titleMedium">{item.title}</Text>
-                        <Text variant="labelMedium">{item.date.format('L')}</Text>
+                        <Text variant="labelMedium">{item.date.toDateString()}</Text>
                       </View>
                       <Checkbox status={'checked'} onPress={() => handleUndo(item.key)}/>
                     </View>

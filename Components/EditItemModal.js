@@ -28,6 +28,7 @@ export default function EditItemModal({itemKey, itemTitle, itemDescription, item
             return item
         }))
         setEditItemModalVisible(false)
+        console.log(itemDate)
       }
 
     return (
@@ -35,8 +36,8 @@ export default function EditItemModal({itemKey, itemTitle, itemDescription, item
           <View key={itemKey} style={styles.todo}>
             <Pressable style={styles.textBox} onPress={() => setEditItemModalVisible(true)}>
                 <Text variant="titleMedium">{itemTitle}</Text>
+                <Text variant="labelMedium">{itemDate.toDateString()}</Text>
                 <Text variant="bodySmall">{itemDescription}</Text>
-                <Text variant="labelMedium">{itemDate.format('L')}</Text>
             </Pressable>
             <Checkbox status={'unchecked'} onPress={() => handleFinish(itemKey)}/>
             </View>
