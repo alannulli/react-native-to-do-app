@@ -1,68 +1,59 @@
 import React, { useState } from 'react';
 
-import { StyleSheet, View, Modal} from 'react-native';
-import { Button, Text, TextInput, Snackbar } from 'react-native-paper';
+import { StyleSheet, View, Pressable, Modal} from 'react-native';
+import { Button, Checkbox, Text, TextInput } from 'react-native-paper';
 
-import { v4 as uuidv4 } from 'uuid';
 import DatePicker from "@dietime/react-native-date-picker";
-import moment from 'moment';
 
-export default function AddItemModal({itemList, setItemList}) {
-    const [addItemModalVisible, setAddItemModalVisible] = useState(false);
+export default function EditItemModal({itemKey, itemTitle, itemDescription, itemDate, itemList, setItemList, handleFinish}) {
+    const [editItemModalVisible, setEditItemModalVisible] = useState(false);
 
-    // input fields for adding new item
-    const [title, setTitle] = useState('')
-    const [description, setDescription] = useState('')
-    const [date, setDate] = useState(moment())
+    // input fields for editing item
+    const [title, setTitle] = useState(itemTitle)
+    const [description, setDescription] = useState(itemDescription)
+    const [date, setDate] = useState(itemDate)
 
-    const [snackbar, setSnackbar] = useState(false)
-
-    const handleAddItem = () => {
-        // cancels add if missing title
+    const handleSave = () => {
+        // cancels edit if empty title
         if (title.length == 0) {
             console.log("incorrect input") // can make inputs highlighted too to show required*
             return
         }
-
-        const item = {
-            key: uuidv4(),
-            title: title,
-            description: description,
-            date: date,
-            done: false
-        }
-        setItemList([...itemList, item])
-        setTitle('')
-        setDescription('')
-        setDate(moment())
-        setSnackbar(true)
+        setItemList(itemList.map((item) => {
+            if (item.key === itemKey) {
+                item.title = title
+                item.description = description
+                item.date = date
+            }
+            return item
+        }))
+        setEditItemModalVisible(false)
       }
 
     return (
         <View>
-          <Button
-            style={[styles.button]}
-            mode='contained'
-            onPress={() => setAddItemModalVisible(true)}
-            >
-            <Text style={styles.textStyle}>Add Bucket List Item</Text>
-          </Button>
+          <View key={itemKey} style={styles.todo}>
+            <Pressable style={styles.textBox} onPress={() => setEditItemModalVisible(true)}>
+                <Text variant="titleMedium">{itemTitle}</Text>
+                <Text variant="bodySmall">{itemDescription}</Text>
+                <Text variant="labelMedium">{itemDate.format('L')}</Text>
+            </Pressable>
+            <Checkbox status={'unchecked'} onPress={() => handleFinish(itemKey)}/>
+            </View>
           <Modal
             animationType="slide"
             transparent={false}
-            visible={addItemModalVisible}
-            onRequestClose={() => setAddItemModalVisible(!addItemModalVisible)}
+            visible={editItemModalVisible}
             >
             <Button
                 style={[styles.button, styles.buttonClose]}
                 icon="arrow-left-thick"
-                onPress={() => setAddItemModalVisible(!addItemModalVisible)}
-            >
-            <Text style={styles.textStyle}>{"<"}</Text>
+                onPress={() => setEditItemModalVisible(false)}
+                >
             </Button>
               <View style={styles.centeredView}>
                 <View style={styles.modalView}>
-                <Text variant="titleLarge">Add Bucket List Item </Text>
+                <Text variant="titleLarge">Edit Bucket List Item </Text>
                 <TextInput
                   style={styles.input}
                   onChangeText={title => setTitle(title)}
@@ -78,35 +69,46 @@ export default function AddItemModal({itemList, setItemList}) {
                   multiline={true}
                   numberOfLines={5}
                   />
-                  
+
                   <Text style={styles.dueDate} variant="titleMedium">Due Date</Text>
                   <DatePicker
                     value={date}
                     onChange={date => setDate(date)}
                     format={'mm-dd-yyyy'}
                     />
+                  
                   <Button 
                     mode='contained' 
-                    onPress={handleAddItem}
+                    onPress={handleSave}
                     style={styles.button}
-                    >Submit Item</Button>
+                    >Save</Button>
             </View>
           </View>
-          <Snackbar
-                visible={snackbar}
-                onDismiss={() => setSnackbar(false)}
-                > Added Item!
-            </Snackbar>
           </Modal>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
+  todo: {
+    padding: 15,
+    backgroundColor: '#f8f8f8',
+    borderBottomWidth: 1,
+    borderColor: '#eee',
+    width: 360,
+    marginTop: 5,
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    display: 'flex',
+    borderRadius: 20,
+  },
+  textBox: {
+    width: 275,
+  },
+
   input: {
     width: 360,
     margin: 12,
-    borderWidth: 1,
     padding: 10,
   },
   dueDate: {
@@ -145,8 +147,7 @@ const styles = StyleSheet.create({
   },
   textStyle: {
     fontWeight: "bold",
-    textAlign: "center",
-    color: "white"
+    textAlign: "center"
   },
   modalText: {
     marginBottom: 15,

@@ -9,13 +9,19 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@dietime/react-native-date-picker": "^1.2.0",
     "@expo/webpack-config": "^0.17.0",
     "@react-native-community/checkbox": "^0.5.12",
+    "@react-native-community/datetimepicker": "^6.5.0",
     "expo": "~46.0.13",
     "expo-status-bar": "~1.4.0",
+    "moment": "^2.29.4",
     "react": "18.0.0",
     "react-dom": "18.0.0",
     "react-native": "0.69.6",
+    "react-native-date-picker": "^4.2.5",
+    "react-native-datepicker": "^1.7.2",
+    "react-native-paper": "^5.0.0-rc.6",
     "react-native-web": "~0.18.7",
     "uuid": "^9.0.0"
   },
