@@ -2,7 +2,7 @@
 Alan Li, al2hkm
 
 # Special Features
-Not many, just hit the requirements!
+Not many, but I made it strawberry themed!
 
 # Lessons Learned
 I ran into some issues while setting up react native on my laptop and after the lesson about expo I tried setting that up and realized that expo takes less than 2 minutes to set up compared to the couple weeks I spent on normal react native. 
