@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { StatusBar, StyleSheet, View,
   SafeAreaView, ScrollView } from 'react-native';
 import { Card, Title, Checkbox, Text } from 'react-native-paper';
+import { FlatList } from 'react-native-web';
 
 import { v4 as uuidv4 } from 'uuid';
 
@@ -46,18 +47,29 @@ export default function App() {
     setItemList([...itemList, item])
   }
 
-  const handleEdit = () => {
-    
+  const handleEdit = (newItem) => {
+    setItemList((prevList) => {
+      return prevList.map((item) => {
+        if (item.key == newItem.key) {
+          item.title = newItem.title
+          item.description = newItem.description
+          item.date = newItem.date
+        }
+        return item
+      })
+    })
   }
 
   const handleFinish = (key) => {
-    setItemList(itemList.map(item => {
-      if (item.key == key) {
-        item.done = true
-        item.date = new Date()
-      }
-      return item
-    }))
+    setItemList((prevList) => {
+      return prevList.map((item) => {
+        if (item.key == key) {
+          item.done = true
+          item.date = new Date()
+        }
+        return item
+      })
+    })
   }
 
   const handleUndo = (key) => {
@@ -78,25 +90,9 @@ export default function App() {
   //   sortList()
   // }, [])
 
-  const unfinishedItems = itemList.filter(item => !item.done).map(item => {
-    return (
-      <EditItemModal
-        itemKey={item.key}
-        itemTitle={item.title}
-        itemDescription={item.description}
-        itemDate={item.date}
-        itemList={itemList}
-        setItemList={setItemList}
-        handleFinish={handleFinish}
-        />
-      );
-  })
-
   return (
     <SafeAreaView style={styles.container}>
         <AddItemModal
-          itemList={itemList}
-          setItemList={setItemList}
           handleAdd={handleAdd}
           />
         <View>
@@ -104,7 +100,18 @@ export default function App() {
             <Card.Content>
               <Title>Bucket List Items</Title>
               <ScrollView style={styles.scrollView}>
-                {unfinishedItems}
+                <View>
+                  <FlatList
+                    data={[...itemList].filter(item => !item.done)}
+                    keyExtractor={(item) => item.key}
+                    renderItem={({item}) => (
+                      <EditItemModal
+                        item={item}
+                        handleFinish={handleFinish}
+                        handleEdit={handleEdit}
+                        />
+                    )}/>
+                </View>
               </ScrollView>
             </Card.Content>
           </Card>

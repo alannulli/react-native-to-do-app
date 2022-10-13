@@ -5,15 +5,13 @@ import { Button, Checkbox, Text, TextInput } from 'react-native-paper';
 
 import DatePicker from "@dietime/react-native-date-picker";
 
-export default function EditItemModal({itemKey, itemTitle, itemDescription, itemDate, itemList, setItemList, handleFinish}) {
+export default function EditItemModal({item, handleFinish, handleEdit}) {
     const [editItemModalVisible, setEditItemModalVisible] = useState(false);
-    console.log(itemKey)
-    console.log(itemTitle)
 
     // input fields for editing item
-    const [title, setTitle] = useState(itemTitle)
-    const [description, setDescription] = useState(itemDescription)
-    const [date, setDate] = useState(itemDate)
+    const [title, setTitle] = useState(item.title)
+    const [description, setDescription] = useState(item.description)
+    const [date, setDate] = useState(item.date)
 
     const handleSave = () => {
         // cancels edit if empty title
@@ -21,32 +19,28 @@ export default function EditItemModal({itemKey, itemTitle, itemDescription, item
             console.log("incorrect input") // can make inputs highlighted too to show required*
             return
         }
-        setItemList(itemList.map((item) => {
-            if (item.key === itemKey) {
-                item.title = title
-                item.description = description
-                item.date = date
-            }
-            return item
-        }))
-        // let sortedList = [...itemList, item].sort((a,b) => {
-        //   return new Date(a.date).getTime() - new Date(b.date).getTime()
-        // })
-        // setItemList(sortedList)
-        
 
+        const newItem = {
+          key: item.key,
+          title: title,
+          description: description,
+          date: date,
+          done: false
+        }
+        handleEdit(newItem)
+        
         setEditItemModalVisible(false)
       }
 
     return (
         <View>
-          <View key={itemKey} style={styles.todo}>
+          <View key={item.key} style={styles.todo}>
             <Pressable style={styles.textBox} onPress={() => setEditItemModalVisible(true)}>
-                <Text variant="titleMedium">{itemTitle}</Text>
-                <Text variant="labelMedium">{itemDate.toDateString()}</Text>
-                <Text variant="bodySmall">{itemDescription}</Text>
+                <Text variant="titleMedium">{item.title}</Text>
+                <Text variant="labelMedium">{item.date.toDateString()}</Text>
+                <Text variant="bodySmall">{item.description}</Text>
             </Pressable>
-            <Checkbox status={'unchecked'} onPress={() => handleFinish(itemKey)}/>
+            <Checkbox status={'unchecked'} onPress={() => handleFinish(item.key)}/>
             </View>
           <Modal
             animationType="slide"
