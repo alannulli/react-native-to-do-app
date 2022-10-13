@@ -7,6 +7,8 @@ import DatePicker from "@dietime/react-native-date-picker";
 
 export default function EditItemModal({itemKey, itemTitle, itemDescription, itemDate, itemList, setItemList, handleFinish}) {
     const [editItemModalVisible, setEditItemModalVisible] = useState(false);
+    console.log(itemKey)
+    console.log(itemTitle)
 
     // input fields for editing item
     const [title, setTitle] = useState(itemTitle)
@@ -27,8 +29,13 @@ export default function EditItemModal({itemKey, itemTitle, itemDescription, item
             }
             return item
         }))
+        // let sortedList = [...itemList, item].sort((a,b) => {
+        //   return new Date(a.date).getTime() - new Date(b.date).getTime()
+        // })
+        // setItemList(sortedList)
+        
+
         setEditItemModalVisible(false)
-        console.log(itemDate)
       }
 
     return (

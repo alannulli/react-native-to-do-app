@@ -6,7 +6,7 @@ import { Button, Text, TextInput, Snackbar } from 'react-native-paper';
 import { v4 as uuidv4 } from 'uuid';
 import DatePicker from "@dietime/react-native-date-picker";
 
-export default function AddItemModal({itemList, setItemList}) {
+export default function AddItemModal({itemList, setItemList, handleAdd}) {
     const [addItemModalVisible, setAddItemModalVisible] = useState(false);
 
     // input fields for adding new item
@@ -16,28 +16,53 @@ export default function AddItemModal({itemList, setItemList}) {
 
     const [snackbar, setSnackbar] = useState(false)
 
+    // const handleAddItem = () => {
+    //     // cancels add if missing title
+    //     if (title.length == 0) {
+    //         console.log("incorrect input") // can make inputs highlighted too to show required*
+    //         return
+    //     }
+
+    //     const item = {
+    //         key: uuidv4(),
+    //         title: title,
+    //         description: description,
+    //         date: date,
+    //         done: false
+    //     }
+
+    //     // let sortedList = [...itemList, item].sort((a,b) => {
+    //     //   return new Date(a.date).getTime() - new Date(b.date).getTime()
+    //     //   })
+    //     // setItemList(sortedList)
+    //     setItemList([...itemList, item])
+    //     // sortList()
+
+    //     setTitle('')
+    //     setDescription('')
+    //     setDate(new Date())
+    //     setSnackbar(true)
+    //   }
+
     const handleAddItem = () => {
-        // cancels add if missing title
-        if (title.length == 0) {
-            console.log("incorrect input") // can make inputs highlighted too to show required*
-            return
-        }
-
-        console.log(date)
-
-        const item = {
-            key: uuidv4(),
-            title: title,
-            description: description,
-            date: date,
-            done: false
-        }
-        setItemList([...itemList, item])
-        setTitle('')
-        setDescription('')
-        setDate(new Date())
-        setSnackbar(true)
+      if (title.length == 0) {
+        console.log("incorrect input") // can make inputs highlighted too to show required*
+        return
       }
+      const item = {
+        key: uuidv4(),
+        title: title,
+        description: description,
+        date: date,
+        done: false
+      }
+      handleAdd(item)
+
+      setTitle('')
+      setDescription('')
+      setDate(new Date())
+      setSnackbar(true)
+    }
 
     return (
         <View>

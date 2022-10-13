@@ -23,14 +23,39 @@ const placeholderItemList = [
     date: new Date(),
     done: false
   },
+  {
+    key: uuidv4(),
+    title: "Go to Carter's Mountain",
+    description: 'No more sunset series but can still visit',
+    date: new Date('03/30/2023'),
+    done: false
+  },
+  {
+    key: uuidv4(),
+    title: "Get a job",
+    description: 'Need money so no starve',
+    date: new Date('07/11/2022'),
+    done: true
+  },
 ]
 
 export default function App() {
   const [itemList, setItemList] = useState(placeholderItemList)
 
+  const handleAdd = (item) => {
+    setItemList([...itemList, item])
+  }
+
+  const handleEdit = () => {
+    
+  }
+
   const handleFinish = (key) => {
     setItemList(itemList.map(item => {
-      if (item.key == key) item.done = true
+      if (item.key == key) {
+        item.done = true
+        item.date = new Date()
+      }
       return item
     }))
   }
@@ -42,38 +67,44 @@ export default function App() {
     }))
   }
 
-  // useEffect(() => {
-  //   let newList = itemList
-  //   newList.sort((a,b) => {
+  // const sortList = () => {
+  //   let sortedList = [...itemList].sort((a,b) => {
   //     return new Date(a.date).getTime() - new Date(b.date).getTime()
   //     })
-  //   setItemList(newList)
-  // }, [itemList])
+  //   setItemList(sortedList)
+  // }
+
+  // useEffect(() => {
+  //   sortList()
+  // }, [])
+
+  const unfinishedItems = itemList.filter(item => !item.done).map(item => {
+    return (
+      <EditItemModal
+        itemKey={item.key}
+        itemTitle={item.title}
+        itemDescription={item.description}
+        itemDate={item.date}
+        itemList={itemList}
+        setItemList={setItemList}
+        handleFinish={handleFinish}
+        />
+      );
+  })
 
   return (
     <SafeAreaView style={styles.container}>
         <AddItemModal
           itemList={itemList}
           setItemList={setItemList}
+          handleAdd={handleAdd}
           />
         <View>
           <Card style={styles.card}>
             <Card.Content>
               <Title>Bucket List Items</Title>
               <ScrollView style={styles.scrollView}>
-                {itemList.filter(item => !item.done).map((item) => {
-                    return (
-                      <EditItemModal
-                        itemKey={item.key}
-                        itemTitle={item.title}
-                        itemDescription={item.description}
-                        itemDate={item.date}
-                        itemList={itemList}
-                        setItemList={setItemList}
-                        handleFinish={handleFinish}
-                        />
-                      );
-                  })}
+                {unfinishedItems}
               </ScrollView>
             </Card.Content>
           </Card>
@@ -89,7 +120,7 @@ export default function App() {
                     <View key={item.key} style={styles.todo}>
                       <View style={styles.textBox}>
                         <Text variant="titleMedium">{item.title}</Text>
-                        <Text variant="labelMedium">{item.date.toDateString()}</Text>
+                        <Text variant="labelMedium">Completed on: {item.date.toDateString()}</Text>
                       </View>
                       <Checkbox status={'checked'} onPress={() => handleUndo(item.key)}/>
                     </View>
