@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { StyleSheet, View, Pressable, Modal} from 'react-native';
+import { StyleSheet, View, Pressable, Modal, ImageBackground} from 'react-native';
 import { Button, Checkbox, Text, TextInput } from 'react-native-paper';
 
 import DatePicker from "@dietime/react-native-date-picker";
@@ -37,7 +37,7 @@ export default function EditItemModal({item, handleFinish, handleEdit}) {
           <View key={item.key} style={styles.todo}>
             <Pressable style={styles.textBox} onPress={() => setEditItemModalVisible(true)}>
                 <Text variant="titleMedium">{item.title}</Text>
-                <Text variant="labelMedium">{item.date.toDateString()}</Text>
+                <Text variant="labelMedium">Due: {item.date.toDateString()}</Text>
                 <Text variant="bodySmall">{item.description}</Text>
             </Pressable>
             <Checkbox status={'unchecked'} onPress={() => handleFinish(item.key)}/>
@@ -47,15 +47,16 @@ export default function EditItemModal({item, handleFinish, handleEdit}) {
             transparent={false}
             visible={editItemModalVisible}
             >
+            <ImageBackground source={require("../assets/boba_strawberry.png")} resizeMode="repeat">
             <Button
-                style={[styles.button, styles.buttonClose]}
+                style={[styles.buttonClose]}
                 icon="arrow-left-thick"
                 onPress={() => setEditItemModalVisible(false)}
                 >
             </Button>
               <View style={styles.centeredView}>
                 <View style={styles.modalView}>
-                <Text variant="titleLarge">Edit Bucket List Item </Text>
+                <Text variant="titleLarge"><b>Edit Bucket List Item</b></Text>
                 <TextInput
                   style={styles.input}
                   onChangeText={title => setTitle(title)}
@@ -72,7 +73,7 @@ export default function EditItemModal({item, handleFinish, handleEdit}) {
                   numberOfLines={5}
                   />
 
-                  <Text style={styles.dueDate} variant="titleMedium">Due Date</Text>
+                  <Text style={styles.dueDate} variant="titleMedium"><b>Due Date</b></Text>
                   <DatePicker
                     value={date}
                     onChange={date => setDate(date)}
@@ -86,6 +87,7 @@ export default function EditItemModal({item, handleFinish, handleEdit}) {
                     >Save</Button>
             </View>
           </View>
+          </ImageBackground>
           </Modal>
         </View>
     )
@@ -142,10 +144,12 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     elevation: 2,
     color: 'white',
-    marginTop: '2vh'
+    marginTop: '2vh',
+    backgroundColor: '#00c04b'
   },
   buttonClose: {
     width: 40,
+    marginTop: '2vh',
   },
   textStyle: {
     fontWeight: "bold",
