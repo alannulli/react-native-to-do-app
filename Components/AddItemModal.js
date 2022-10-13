@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { StyleSheet, View, Modal} from 'react-native';
+import { StyleSheet, View, Modal, ImageBackground } from 'react-native';
 import { Button, Text, TextInput, Snackbar } from 'react-native-paper';
 
 import { v4 as uuidv4 } from 'uuid';
@@ -51,16 +51,16 @@ export default function AddItemModal({ handleAdd }) {
             visible={addItemModalVisible}
             onRequestClose={() => setAddItemModalVisible(!addItemModalVisible)}
             >
+            <ImageBackground source={require("../assets/boba_strawberry.png")} resizeMode="repeat">
             <Button
-                style={[styles.button, styles.buttonClose]}
+                style={[styles.buttonClose]}
                 icon="arrow-left-thick"
                 onPress={() => setAddItemModalVisible(!addItemModalVisible)}
             >
-            <Text style={styles.textStyle}>{"<"}</Text>
             </Button>
               <View style={styles.centeredView}>
                 <View style={styles.modalView}>
-                <Text variant="titleLarge">Add Bucket List Item </Text>
+                <Text variant="titleLarge"><b>Add Bucket List Item</b></Text>
                 <TextInput
                   style={styles.input}
                   onChangeText={title => setTitle(title)}
@@ -77,7 +77,7 @@ export default function AddItemModal({ handleAdd }) {
                   numberOfLines={5}
                   />
                   
-                  <Text style={styles.dueDate} variant="titleMedium">Due Date</Text>
+                  <Text style={styles.dueDate} variant="titleMedium"><b>Due Date</b></Text>
                   <DatePicker
                     value={date}
                     onChange={date => setDate(date)}
@@ -93,8 +93,10 @@ export default function AddItemModal({ handleAdd }) {
           <Snackbar
                 visible={snackbar}
                 onDismiss={() => setSnackbar(false)}
+                duration={3000}
                 > Added Item!
             </Snackbar>
+            </ImageBackground>
           </Modal>
         </View>
     )
@@ -136,10 +138,12 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     elevation: 2,
     color: 'white',
-    marginTop: '2vh'
+    marginTop: '2vh',
+    backgroundColor: '#00c04b'
   },
   buttonClose: {
     width: 40,
+    marginTop: '2vh',
   },
   textStyle: {
     fontWeight: "bold",

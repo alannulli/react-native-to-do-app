@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { StatusBar, StyleSheet, View,
-  SafeAreaView, ScrollView } from 'react-native';
-import { Card, Title, Checkbox, Text } from 'react-native-paper';
+  SafeAreaView, ImageBackground } from 'react-native';
+import { Card, Title, Checkbox, Text, Appbar } from 'react-native-paper';
 import { FlatList } from 'react-native-web';
 
 import { v4 as uuidv4 } from 'uuid';
@@ -27,7 +27,7 @@ const placeholderItemList = [
   {
     key: uuidv4(),
     title: "Go to Carter's Mountain",
-    description: 'No more sunset series but can still visit',
+    description: 'No more sunset series but can still visit and pick apples',
     date: new Date('03/30/2023'),
     done: false
   },
@@ -79,30 +79,25 @@ export default function App() {
     }))
   }
 
-  // const sortList = () => {
-  //   let sortedList = [...itemList].sort((a,b) => {
-  //     return new Date(a.date).getTime() - new Date(b.date).getTime()
-  //     })
-  //   setItemList(sortedList)
-  // }
-
-  // useEffect(() => {
-  //   sortList()
-  // }, [])
-
   return (
-    <SafeAreaView style={styles.container}>
+    <View>
+      <ImageBackground style={styles.body} source={require("./assets/boba_strawberry.png")} resizeMode="repeat">
+      <Appbar.Header style={styles.header} mode='center-aligned'>
+          <Appbar.Content title={<Text><b>UVA Bucket List</b></Text>}/>
+        </Appbar.Header>
+      <SafeAreaView style={styles.container}>
         <AddItemModal
           handleAdd={handleAdd}
           />
         <View>
           <Card style={styles.card}>
             <Card.Content>
-              <Title>Bucket List Items</Title>
-              <ScrollView style={styles.scrollView}>
+              <Title><b>Bucket List Items</b></Title>
                 <View>
                   <FlatList
-                    data={[...itemList].filter(item => !item.done)}
+                    data={[...itemList].filter(item => !item.done).sort((a,b) => {
+                      return new Date(a.date).getTime() - new Date(b.date).getTime()
+                      })}
                     keyExtractor={(item) => item.key}
                     renderItem={({item}) => (
                       <EditItemModal
@@ -112,49 +107,54 @@ export default function App() {
                         />
                     )}/>
                 </View>
-              </ScrollView>
             </Card.Content>
           </Card>
 
           <Card style={styles.card}>
             <Card.Content>
-              <Title>Finished Bucket List Items</Title>
-              <ScrollView>
-                {itemList.filter(item => item.done).sort((a,b) => {
-                  return new Date(a.date).getTime() - new Date(b.date).getTime()
-                  }).map((item) => {
-                  return (
-                    <View key={item.key} style={styles.todo}>
-                      <View style={styles.textBox}>
-                        <Text variant="titleMedium">{item.title}</Text>
-                        <Text variant="labelMedium">Completed on: {item.date.toDateString()}</Text>
-                      </View>
-                      <Checkbox status={'checked'} onPress={() => handleUndo(item.key)}/>
-                    </View>
-                    );
-                  })}
-              </ScrollView>
+              <Title><b>Finished Bucket List Items</b></Title>
+                <View>
+                  <FlatList
+                    data={[...itemList].filter(item => item.done).sort((a,b) => {
+                      return new Date(a.date).getTime() - new Date(b.date).getTime()
+                      })}
+                      keyExtractor={(item) => item.key}
+                      renderItem={({item}) => (
+                        <View key={item.key} style={styles.todo}>
+                          <View style={styles.textBox}>
+                            <Text variant="titleMedium">{item.title}</Text>
+                            <Text variant="labelMedium">Completed on: {item.date.toDateString()}</Text>
+                          </View>
+                          <Checkbox color='#00c04b' status={'checked'} onPress={() => handleUndo(item.key)}/>
+                        </View>
+                      )}
+                    />
+                </View>
             </Card.Content>
           </Card>
         </View>
-    </SafeAreaView>
+      </SafeAreaView>
+      </ImageBackground>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  body: {
+    minHeight: '100vh'
+  },
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     alignItems: 'center',
     paddingTop: StatusBar.currentHeight,
   },
-  sectionTitle: {
-    fontSize: 30,
+  header: {
+    backgroundColor: 'pink'
   },
 
   card: {
     margin: '1vh',
-    minHeight: '40vh',
+    minHeight: '20vh',
     backgroundColor: 'pink'
   },
 
