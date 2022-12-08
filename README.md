@@ -1,6 +1,3 @@
-## Name and Computing ID
-Alan Li, al2hkm
-
 ## Special Features
 Not many, but I made it strawberry themed!
 
